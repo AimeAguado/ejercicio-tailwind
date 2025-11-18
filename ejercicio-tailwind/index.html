@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="script.js"></script>
+</head>
+<body class="bg-gray-100">
+    <div id="loginForm" class="max-w-sm rounded-xl overflow-hidden shadow-lg py-8 mx-auto mt-10 px-8">
+        <h1 class="font-bold text-2xl mt-4 mb-6 text-center">
+            Login to your account
+        </h1>
+        <div class="mt-2">
+            <label class="text-gray-500 mb-2" for="email">Email </label>
+            <input id="email" class="border border-gray-300 flex p-1 rounded w-full " type="text">
+        </div>
+        <div id="loginForm" class="mt-2">
+            <label class="text-gray-500 mb-2" for="password"> Password </label>
+            <input id="password" class="border border-gray-300 flex p-1 rounded w-full " type="password">
+        </div>
+        <p class="text-blue-500 cursor-pointer text-right text-sm mt-2"> forgot password?</p>
+        <button onclick="login()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 w-full my-6 rounded">
+            Log in
+        </button>
+        <p class="text-center text-gray-500 text-sm">Don't have an account? <span onclick="abriForm()" class="text-blue-500 cursor-pointer">Sign up</span></p>
+    </div>
+         <div id="registerForm" class="max-w-sm rounded-xl overflow-hidden shadow-lg py-8 mx-auto mt-10 px-8" style="display:none;">
+            <h1 class="font-bold text-2xl mt-4 mb-6 text-center">Register</h1>
+            <div class="mt-2">
+                <label class="text-gray-500 mb-2" for="">Nombre</label>
+                <input id="nombre" type="text" class="border border-gray-300 flex p-1 rounded w-full ">
+            </div>
+            <div class="mt-2">
+                <label class="text-gray-500 mb-2" for="">Apellido</label>
+                <input id="apellido" type="text" class="border border-gray-300 flex p-1 rounded w-full ">
+            </div>
+            <div class="mt-2">
+                <label class="text-gray-500 mb-2" for="country">Pais</label>
+                <div>
+                    <select name="" id="country"></select>                    
+                </div>
+            </div>
+            <div class="mt-2">
+                <label class="text-gray-500 mb-2" for="email">Email </label>
+                <input id="register-email" class="border border-gray-300 flex p-1 rounded w-full " type="text">
+            </div>
+            <div id="loginForm" class="mt-2">
+                <label class="text-gray-500 mb-2" for="password"> Password </label>
+                <input id="register-password" class="border border-gray-300 flex p-1 rounded w-full " type="password">
+            </div>
+        
+        
+        
+        
+            <button onclick="register()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 w-full my-6 rounded"> Register </button>
+        
+        </div>
+</body>
+</html>

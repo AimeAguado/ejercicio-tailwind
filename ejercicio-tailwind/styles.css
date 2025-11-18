@@ -1,0 +1,55 @@
+body {
+    background-color:#f2f2f2;
+}
+
+.card-container{
+    width: 200px;
+    border: 1px solid black;
+    padding: 10px;
+    border-radius: 15px;
+    background-color:#ffffff;
+    border: none;
+}
+.img-card{
+    width: 200px;
+    height: 200px;
+    flex-wrap: wrap;
+}
+.sale {
+    background-color: #EC7259;
+    border: none;
+    padding: 5px;
+    color: white;
+    width: fit-content;
+    border-radius: 5px;
+}
+.card-title{
+    font-weight: bold;
+    font-size: 20px;
+    font-family: 'Inter', sans-serif;
+}
+.card-text{
+    margin-top: 5px;
+    font-weight: bold;
+    font-size: 20px;
+}
+.star{
+    width: 15px;
+    height: 15px;
+}
+.rating{
+    display: flex;
+    flex-direction: row;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.add{
+    background-color: #324572;
+    border: none;
+    padding: 5px;
+    color: white;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 20px;
+}
