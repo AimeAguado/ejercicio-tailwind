@@ -25,7 +25,7 @@ function mostrarTabla(usuarios) {
       <td>${user.email}</td>
       <td>
         <button class="bg-red-500 hover:bg-red-400 text-white px-3 py-1 rounded"
-                onclick="borrarUsuario('${user.id}')">
+                onclick="borrarUsuario('${user._id}')">
           Borrar
         </button>
       </td>
@@ -35,25 +35,16 @@ function mostrarTabla(usuarios) {
   });
 }
 
-function borrarUsuario(id) {
-  if (!confirm("¿Seguro que quieres borrar este usuario?")) return;
+async function borrarUsuario(id) {
 
-  fetch(`https://back-nest-xi.vercel.app/users/${users}`, {
-    method: "DELETE"
-  })
-    .then(res => {
-      if (!res.ok) throw new Error("Error al borrar usuario");
-      return res.json();
-    })
-    .then(() => {
-      alert("Usuario borrado correctamente");
-      cargarUsers();
-    })
-    .then(() => {
-      const fila = btn.closest("tr");
-      fila.remove();
-      alert("Usuario borrado correctamente");
-    })
-    .catch(err => console.error("Error:", err));
+  try {
+    const res = await fetch(`https://back-nest-xi.vercel.app/users/delete/${id}`, {
+      method: "DELETE"
+    });
+
+    alert("Usuario borrado correctamente");
+
+  } catch (err) {
+    console.error("Error borrando usuario:", err);
+  }
 }
-
