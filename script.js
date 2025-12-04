@@ -11,15 +11,23 @@ async function login() {
     // fetch
 
     try {
+        const token = await localStorage.getItem("token")
         const response = await fetch("https://back-nest-xi.vercel.app/login", {
             method: "POST",
             headers: {
+                "Authorization": "Bearer " + token,
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({ email, password })
         });
         // navegar a home.html
         if (response.ok) {
+            const data = await response.json();
+            console.log(data)
+            await localStorage.setItem("user", JSON.stringify(data.user));
+            await localStorage.setItem("token", data.access_token)
+
+
             window.location.href = "home.html";
         } else {
             const errorData = await response.json();
@@ -66,6 +74,9 @@ async function register() {
         });
         // navegar a home.html
         if (response.ok) {
+            const data = await response.json();
+            await localStorage.setItem("user", JSON.stringify(data.user));
+            await localStorage.setItem("token", data.access_token)
             window.location.href = "home.html";
         } else {
             const errorData = await response.json();

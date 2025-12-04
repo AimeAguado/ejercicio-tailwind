@@ -1,4 +1,12 @@
 document.addEventListener("DOMContentLoaded", function () {
+  const userGuardado = JSON.parse(localStorage.getItem("user"));
+      if (userGuardado && userGuardado) {
+        document.getElementById("saludo").textContent = `Hola ${userGuardado.name}`;
+    } else {
+        document.getElementById("saludo").textContent = "Hola invitado";
+    }
+
+
   cargarUsers();
   
 const close = document.getElementById("closeModal");
@@ -20,8 +28,14 @@ window.addEventListener("click", (e) => {
 
 
 
-function cargarUsers() {
-  fetch("https://back-nest-xi.vercel.app/users")
+async function cargarUsers() {
+  const token = await localStorage.getItem("token")
+  fetch("https://back-nest-xi.vercel.app/users", {
+      method: "GET",
+            headers: {
+                "Authorization": "Bearer " + token
+            },
+  })
     .then(res => res.json())
     .then(data => {
       console.log(data);
@@ -58,8 +72,12 @@ function mostrarTabla(usuarios) {
 async function borrarUsuario(id) {
 
   try {
+    const token = await localStorage.getItem("token")
     const res = await fetch(`https://back-nest-xi.vercel.app/users/${id}`, {
-      method: "DELETE"
+      method: "DELETE",
+      headers: {
+            "Authorization": "Bearer " + token
+        },
     });
 
     if (res.ok){
@@ -79,7 +97,11 @@ async function mostrarModal(id) {
   const modal = document.getElementById("myModal");
   modal.style.display = "flex";
   try{
-    const res = await fetch(`https://back-nest-xi.vercel.app/users/${id}`)
+    const token = await localStorage.getItem("token")
+    const res = await fetch(`https://back-nest-xi.vercel.app/users/${id}`, {
+      headers: {
+      "Authorization": "Bearer " + token }
+    })
   if (res.ok){
     const usuario = await res.json();
     console.log(usuario)
@@ -105,10 +127,12 @@ async function editForm() {
       lastname,
       email
     }
+    const token = await localStorage.getItem("token")
     const res = await fetch(`https://back-nest-xi.vercel.app/users/${id}`,  {
             method: "PUT",
             headers: {
-                "Content-Type": "application/json"
+              "Authorization": "Bearer " + token ,
+              "Content-Type": "application/json"
             },
             body: JSON.stringify(usuarioEditado)
         })
@@ -122,3 +146,110 @@ async function editForm() {
   }
   
 }
+
+document.addEventListener("DOMContentLoaded", function (){
+    const btnNoti = document.getElementById("btn-notification");
+    const panelNoti = document.getElementById("notificaciones");
+
+    // Abrir/cerrar panel al hacer click
+    btnNoti.addEventListener("click", (e) => {
+        e.stopPropagation(); // evita que el click cierre el panel
+        panelNoti.classList.toggle("hidden");
+        marcarComoLeidas()
+    });
+
+    // Cerrar si se hace click fuera
+    document.addEventListener("click", (e) => {
+        if (!panelNoti.contains(e.target)) {
+            panelNoti.classList.add("hidden");
+        }
+    });
+    cargarNotificaciones(); 
+});
+
+async function cargarNotificaciones() {
+        try {
+        const token = localStorage.getItem("token");
+        const res = await fetch("https://back-nest-xi.vercel.app/notifications", {
+            headers: { "Authorization": "Bearer " + token }
+        });
+
+        if (!res.ok) {
+            console.error("Error al obtener notificaciones");
+            return;
+        }
+        const data = await res.json(); // lista de notificaciones
+        // Actualizar badge con la cantidad
+        let noLeidas = 0 
+        data.forEach(noti => {
+          if (noti.read == false){
+            noLeidas = noLeidas+1
+          }
+        })
+        actualizarBadge(noLeidas);
+        // Actualizar lista del panel
+        const lista = document.getElementById("lista-notificaciones");
+        lista.innerHTML = "";
+        if (data.length === 0) {
+            lista.innerHTML = `<li>No hay notificaciones nuevas.</li>`;
+        } else {
+            data.forEach(noti => {
+                const li = document.createElement("li");
+                li.textContent = noti.title ?? "Notificación";
+                lista.appendChild(li);
+        });
+        }
+
+} catch (err) {
+        console.error("Error cargando notificaciones:", err);
+    }}
+
+function actualizarBadge(cantidad) {
+    const badge = document.getElementById("badge");
+
+    if (cantidad > 0) {
+        badge.textContent = cantidad;
+        badge.classList.remove("hidden");
+    } else {
+        badge.classList.add("hidden");
+    }
+}
+
+function llenarPanel(notificaciones) {
+    const lista = document.getElementById("lista-notificaciones");
+    lista.innerHTML = "";
+
+    if (notificaciones.length === 0) {
+        lista.innerHTML = "<li>No hay notificaciones.</li>";
+        return;
+    }
+
+    notificaciones.forEach(noti => {
+        const li = document.createElement("li");
+        li.textContent = noti.message;
+        li.className = noti.read ? "text-gray-500" : "text-white font-semibold";
+        lista.appendChild(li);
+    });
+}
+async function marcarComoLeidas() {
+    try {
+        const token = localStorage.getItem("token");
+
+        const res = await fetch("https://back-nest-xi.vercel.app/notifications/read-all" , {
+            method: "PATCH",
+            headers: {
+                "Authorization": "Bearer " + token 
+            }
+        });
+
+        if (res.ok) {
+            actualizarBadge(0);
+            cargarNotificaciones(); // para refrescar el panel
+        }
+
+
+    } catch (err) {
+        console.error("Error al marcar como leídas", err);
+    }
+}
+
