@@ -253,3 +253,25 @@ async function marcarComoLeidas() {
     }
 }
 
+
+async function send() {
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await fetch("https://back-nest-xi.vercel.app/notifications", {
+      method: "GET",
+      headers: {
+        "Authorization": "Bearer " + token
+      }
+    });
+      if (res.ok) {
+        actualizarBadge(0);
+      }
+    const data = await res.json();
+    console.log("Notificaciones:", data);
+
+  } catch (error) {
+    console.error("Error al obtener las notificaciones:", error);
+  }
+
+}
