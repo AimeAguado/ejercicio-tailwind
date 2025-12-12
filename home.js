@@ -155,7 +155,6 @@ document.addEventListener("DOMContentLoaded", function (){
     btnNoti.addEventListener("click", (e) => {
         e.stopPropagation(); // evita que el click cierre el panel
         panelNoti.classList.toggle("hidden");
-        marcarComoLeidas()
     });
 
     // Cerrar si se hace click fuera
@@ -193,11 +192,38 @@ async function cargarNotificaciones() {
         if (data.length === 0) {
             lista.innerHTML = `<li>No hay notificaciones nuevas.</li>`;
         } else {
-            data.forEach(noti => {
-                const li = document.createElement("li");
-                li.textContent = noti.title ?? "Notificación";
-                lista.appendChild(li);
-        });
+        data.forEach(noti => {
+        const li = document.createElement("li");
+        li.classList.remove("bg-blue-100", "text-gray-600");
+        li.classList.add("bg-blue-300", "text-blue-900");
+
+        
+        li.className = `
+        notificacion p-2 rounded mb-2 border-l-4 cursor-pointer flex justify-between items-center
+        ${noti.read ? "bg-blue-300 text-blue-900" : "bg-blue-100 text-gray-600"}
+    `;
+    li.innerHTML = noti.title ?? "Notificación";
+
+
+
+    const noLeida = document.createElement("button");
+    noLeida.className ="ml-3 px-2 py-1 text-blue-600 hover:text-blue-800 font-bold"
+    noLeida.textContent = "O";
+   // noLeida.classList.add("flex-1");
+    noLeida.addEventListener("click", () => marcarUnaComoLeida(noLeida, noti._id));
+
+    const btnEliminar = document.createElement("button");
+    btnEliminar.innerHTML = "X";
+    btnEliminar.className =
+        "ml-3 px-2 py-1 text-red-600 hover:text-red-800 font-bold";
+    btnEliminar.addEventListener("click", (e) => {
+        e.stopPropagation();
+        eliminarNotificacion(noti._id);
+    });
+    li.appendChild(noLeida);
+    li.appendChild(btnEliminar);
+    lista.appendChild(li);
+});
         }
 
 } catch (err) {
@@ -235,18 +261,17 @@ async function marcarComoLeidas() {
     try {
         const token = localStorage.getItem("token");
 
-        const res = await fetch("https://back-nest-xi.vercel.app/notifications/read-all" , {
+        const res = await fetch("https://back-nest-xi.vercel.app/notifications/read" , {
             method: "PATCH",
             headers: {
-                "Authorization": "Bearer " + token 
+                "Authorization": "Bearer " + token,
+                "Content-Type": "application/json"
             }
         });
 
         if (res.ok) {
-            actualizarBadge(0);
             cargarNotificaciones(); // para refrescar el panel
         }
-
 
     } catch (err) {
         console.error("Error al marcar como leídas", err);
@@ -256,16 +281,25 @@ async function marcarComoLeidas() {
 
 async function send() {
   try {
+    const title = document.getElementById("title").value;
+    const description = document.getElementById("description").value;
     const token = localStorage.getItem("token");
 
+    const nuevaNotificacion = {
+      title : title,
+      description : description,
+      read : false
+    }
     const res = await fetch("https://back-nest-xi.vercel.app/notifications", {
-      method: "GET",
+      method: "POST",
       headers: {
-        "Authorization": "Bearer " + token
-      }
+        "Authorization": "Bearer " + token,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(nuevaNotificacion)
     });
       if (res.ok) {
-        actualizarBadge(0);
+        cargarNotificaciones();
       }
     const data = await res.json();
     console.log("Notificaciones:", data);
@@ -274,4 +308,74 @@ async function send() {
     console.error("Error al obtener las notificaciones:", error);
   }
 
+}
+
+function noLeidas() {
+  const div = document.createElement("div");
+
+  div.className = `notificacion ${noLeidas.read ? "leida" : "no-leida"}`;
+
+  div.innerHTML = `
+    <h4>${n.title}</h4>
+    <p>${n.message}</p>
+    <button onclick="marcarComoLeida('${noLeidas.id}', this)">Marcar como leída</button>
+  `;
+
+  return div;
+}
+
+async function marcarUnaComoLeida(boton, id) {
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(`https://back-nest-xi.vercel.app/notifications/${id}/read`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      }
+    });
+
+    if (!res.ok) {
+      console.error("Error al marcar como leída");
+      return;
+    }
+
+    const div = boton.closest(".notificacion");
+    div.classList.remove("no-leida");
+    div.classList.add("leida");
+
+    boton.remove(); 
+
+    btnNoti.addEventListener("click", (e) => {
+    e.stopPropagation();
+    panelNoti.classList.toggle("hidden"); 
+});
+
+  } catch (error) {
+    console.error("Error marcando como leído:", error);
+  }
+}
+
+async function eliminarNotificacion(id) {
+    try {
+        const token = localStorage.getItem("token");
+
+        const res = await fetch(`https://back-nest-xi.vercel.app/notifications/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
+
+        if (!res.ok) {
+            console.error("Error al eliminar notificación");
+            return;
+        }
+
+        cargarNotificaciones();
+
+    } catch (error) {
+        console.error("Error eliminando notificación:", error);
+    }
 }
