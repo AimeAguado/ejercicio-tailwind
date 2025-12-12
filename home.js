@@ -151,13 +151,12 @@ document.addEventListener("DOMContentLoaded", function (){
     const btnNoti = document.getElementById("btn-notification");
     const panelNoti = document.getElementById("notificaciones");
 
-    // Abrir/cerrar panel al hacer click
+
     btnNoti.addEventListener("click", (e) => {
-        e.stopPropagation(); // evita que el click cierre el panel
+        e.stopPropagation(); 
         panelNoti.classList.toggle("hidden");
     });
 
-    // Cerrar si se hace click fuera
     document.addEventListener("click", (e) => {
         if (!panelNoti.contains(e.target)) {
             panelNoti.classList.add("hidden");
@@ -167,7 +166,7 @@ document.addEventListener("DOMContentLoaded", function (){
 });
 
 async function cargarNotificaciones() {
-        try {
+    try {
         const token = localStorage.getItem("token");
         const res = await fetch("https://back-nest-xi.vercel.app/notifications", {
             headers: { "Authorization": "Bearer " + token }
@@ -177,6 +176,7 @@ async function cargarNotificaciones() {
             console.error("Error al obtener notificaciones");
             return;
         }
+<<<<<<< HEAD
         const data = await res.json(); // lista de notificaciones
         // Actualizar badge con la cantidad
         let noLeidas = 0 
@@ -225,10 +225,23 @@ async function cargarNotificaciones() {
     lista.appendChild(li);
 });
         }
+=======
+>>>>>>> c9e1152901d586c9b3487a8543247caf5d3ca910
 
-} catch (err) {
+        const data = await res.json();
+
+       
+        const noLeidas = data.filter(noti => !noti.read).length;
+        actualizarBadge(noLeidas);
+
+        
+        renderNotificaciones(data);
+
+    } catch (err) {
         console.error("Error cargando notificaciones:", err);
-    }}
+    }
+}
+
 
 function actualizarBadge(cantidad) {
     const badge = document.getElementById("badge");
@@ -253,7 +266,7 @@ function llenarPanel(notificaciones) {
     notificaciones.forEach(noti => {
         const li = document.createElement("li");
         li.textContent = noti.message;
-        li.className = noti.read ? "text-gray-500" : "text-white font-semibold";
+        li.className = noti.read ? "text-blue-500" : "text-white font-semibold";
         lista.appendChild(li);
     });
 }
@@ -270,7 +283,12 @@ async function marcarComoLeidas() {
         });
 
         if (res.ok) {
+<<<<<<< HEAD
             cargarNotificaciones(); // para refrescar el panel
+=======
+            actualizarBadge(0);
+            cargarNotificaciones(); 
+>>>>>>> c9e1152901d586c9b3487a8543247caf5d3ca910
         }
 
     } catch (err) {
@@ -278,8 +296,97 @@ async function marcarComoLeidas() {
     }
 }
 
+function renderNotificaciones(notificaciones) {
+    const lista = document.getElementById("lista-notificaciones");
+    lista.innerHTML = "";
+
+    if (notificaciones.length === 0) {
+        lista.innerHTML = `<li class="text-gray-400 text-sm p-3">No hay notificaciones.</li>`;
+        return;
+    }
+
+    notificaciones.forEach(noti => {
+        const li = document.createElement("li");
+
+        li.className = `
+            flex justify-between items-center p-3 rounded-lg cursor-pointer 
+            transition
+            ${noti.read 
+                ? "bg-white hover:bg-blue-100 text-gray-600" 
+                : "bg-blue-50 hover:bg-blue-100 text-black font-semibold"}
+        `;
+
+        li.innerHTML = `
+            <div>
+                <p>${noti.title}</p>
+                <p class="text-sm text-gray-500">${noti.description ?? ""}</p>
+            </div>
+
+            <div class="flex gap-3 items-center">
+                <button 
+                    onclick="marcarUnaComoLeida('${noti._id}')"
+                    class="w-3 h-3 rounded-full 
+                    ${noti.read ? "bg-gray-400" : "bg-blue-600"}">
+                </button>
+
+                <button 
+                    onclick="borrarNotificacion('${noti._id}')"
+                    class="text-red-500 hover:text-red-700 text-lg font-bold">
+                    ×
+                </button>
+            </div>
+        `;
+
+        lista.appendChild(li);
+    });
+}
+
+async function borrarNotificacion(id) {
+    try {
+        const token = localStorage.getItem("token");
+
+        const res = await fetch(`https://back-nest-xi.vercel.app/notifications/${id}`, {
+            method: "DELETE",
+            headers: { "Authorization": "Bearer " + token }
+        });
+
+        if (res.ok) {
+            cargarNotificaciones();
+        }
+    } catch (err) {
+        console.error("Error eliminando notificación", err);
+    }
+}
+
+
+async function marcarUnaComoLeida(id) {
+    try {
+        const token = localStorage.getItem("token");
+
+        const res = await fetch(`https://back-nest-xi.vercel.app/notifications/${id}/read`, {
+            method: "PATCH",
+            headers: { "Authorization": "Bearer " + token }
+        });
+
+        if (res.ok) {
+            cargarNotificaciones();
+        }
+
+    } catch (err) {
+        console.error("Error marcando notificación como leída", err);
+    }
+}
 
 async function send() {
+
+    const title = document.getElementById("title").value;
+    const description = document.getElementById("description").value;
+    
+    const nuevaNotificacion = {
+        title : title,
+        description : description,
+        read : false
+    }
   try {
     const title = document.getElementById("title").value;
     const description = document.getElementById("description").value;
