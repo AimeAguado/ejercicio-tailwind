@@ -1,488 +1,257 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const userGuardado = JSON.parse(localStorage.getItem("user"));
-      if (userGuardado && userGuardado) {
-        document.getElementById("saludo").textContent = `Hola ${userGuardado.name}`;
-    } else {
-        document.getElementById("saludo").textContent = "Hola invitado";
-    }
+document.addEventListener("DOMContentLoaded", () => {
+  // ===== SALUDO =====
+  const user = JSON.parse(localStorage.getItem("user"));
+  const saludo = document.getElementById("saludo");
+  saludo.textContent = user?.name ? `Hola ${user.name}` : "Hola invitado";
 
+  // ===== NOTIFICACIONES =====
+  const btnNoti = document.getElementById("btn-notification");
+  const panelNoti = document.getElementById("notificaciones");
+
+  btnNoti.addEventListener("click", (e) => {
+    e.stopPropagation();
+    panelNoti.classList.toggle("hidden");
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!panelNoti.contains(e.target) && !btnNoti.contains(e.target)) {
+      panelNoti.classList.add("hidden");
+    }
+  });
 
   cargarUsers();
-  
-const close = document.getElementById("closeModal");
-  const modal = document.getElementById("myModal");
-
-
-close.addEventListener("click", () => {
-  modal.style.display = "none";
+  cargarNotificaciones();
 });
 
-
-// Cerrar clickeando afuera
-window.addEventListener("click", (e) => {
-  if (e.target === modal) {
-    modal.style.display = "none";
-  }
-});
-});
-
-
+// ================= USERS =================
 
 async function cargarUsers() {
-  const token = await localStorage.getItem("token")
-  fetch("https://back-nest-xi.vercel.app/users", {
-      method: "GET",
-            headers: {
-                "Authorization": "Bearer " + token
-            },
-  })
-    .then(res => res.json())
-    .then(data => {
-      console.log(data);
-      mostrarTabla(data);
-    })
-    .catch(err => console.error("Error:", err));
+  const token = localStorage.getItem("token");
+
+  const res = await fetch("https://back-nest-xi.vercel.app/users", {
+    headers: { Authorization: "Bearer " + token }
+  });
+
+  const users = await res.json();
+  renderTabla(users);
 }
 
-function mostrarTabla(usuarios) {
+function renderTabla(users) {
   const tbody = document.querySelector("#aime tbody");
-  tbody.innerHTML = ""; 
+  tbody.innerHTML = "";
 
-  usuarios.forEach(user => {
-    const row = document.createElement("tr");
+  users.forEach(user => {
+    const tr = document.createElement("tr");
+    tr.className = "border-b";
 
-    row.innerHTML = `
-      <td>${user.name}</td>
-      <td>${user.lastname}</td>
-      <td>${user.email}</td>
-      <td>
-        <button class="bg-red-500 hover:bg-red-400 text-white px-3 py-1 rounded" onclick="borrarUsuario('${user._id}')">
+    tr.innerHTML = `
+      <td class="p-2">${user.name}</td>
+      <td class="p-2">${user.lastname}</td>
+      <td class="p-2">${user.email}</td>
+      <td class="p-2 flex gap-2">
+        <button 
+          class="bg-red-500 hover:bg-red-400 text-white px-3 py-1 rounded"
+          onclick="borrarUsuario('${user._id}')">
           Borrar
         </button>
-        <button class="bg-blue-500 hover:bg-blue-400 text-white px-3 py-1 rounded" onclick="mostrarModal('${user._id}')">
+        <button 
+          class="bg-blue-500 hover:bg-blue-400 text-white px-3 py-1 rounded"
+          onclick="mostrarModal('${user._id}')">
           Editar
         </button>
       </td>
     `;
-
-    tbody.appendChild(row);
+    tbody.appendChild(tr);
   });
 }
 
 async function borrarUsuario(id) {
+  const token = localStorage.getItem("token");
 
-  try {
-    const token = await localStorage.getItem("token")
-    const res = await fetch(`https://back-nest-xi.vercel.app/users/${id}`, {
-      method: "DELETE",
-      headers: {
-            "Authorization": "Bearer " + token
-        },
-    });
+  await fetch(`https://back-nest-xi.vercel.app/users/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: "Bearer " + token }
+  });
 
-    if (res.ok){
-      alert("Usuario borrado correctamente");
-      // el usuario se borro
-      cargarUsers()
-    }
-
-    
-
-  } catch (err) {
-    console.error("Error borrando usuario:", err);
-  }
+  cargarUsers();
 }
 
+// ================= MODAL =================
+
 async function mostrarModal(id) {
-  const modal = document.getElementById("myModal");
-  modal.style.display = "flex";
-  try{
-    const token = await localStorage.getItem("token")
-    const res = await fetch(`https://back-nest-xi.vercel.app/users/${id}`, {
-      headers: {
-      "Authorization": "Bearer " + token }
-    })
-  if (res.ok){
-    const usuario = await res.json();
-    console.log(usuario)
-    document.getElementById("email").value = usuario.email;
-    document.getElementById("nombre").value = usuario.name;
-    document.getElementById("apellido").value = usuario.lastname;
-    document.getElementById("usuarioId").value = id;
-  }
-  } catch (err) {
-    console.error("Error borrando usuario:", err);
-  }
+  document.getElementById("myModal").classList.remove("hidden");
+
+  const token = localStorage.getItem("token");
+  const res = await fetch(
+    `https://back-nest-xi.vercel.app/users/${id}`,
+    { headers: { Authorization: "Bearer " + token } }
+  );
+
+  const user = await res.json();
+
+  usuarioId.value = id;
+  nombre.value = user.name;
+  apellido.value = user.lastname;
+  email.value = user.email;
+}
+
+function cerrarModal() {
+  document.getElementById("myModal").classList.add("hidden");
 }
 
 async function editForm() {
-  try{ 
-    const id = document.getElementById("usuarioId").value
-    const name = document.getElementById("nombre").value;
-    const lastname = document.getElementById("apellido").value;
-    const email = document.getElementById("email").value;
-    const modal = document.getElementById("myModal");
-    const usuarioEditado = {
-      name,
-      lastname,
-      email
-    }
-    const token = await localStorage.getItem("token")
-    const res = await fetch(`https://back-nest-xi.vercel.app/users/${id}`,  {
-            method: "PUT",
-            headers: {
-              "Authorization": "Bearer " + token ,
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(usuarioEditado)
-        })
-        if (res.ok){
-          alert("Usuario editado")
-          modal.style.display = "none";
-          cargarUsers()
-        }
-  } catch (err) {
-    console.error("Error editando usuario:", err);
-  }
-  
+  const token = localStorage.getItem("token");
+  const id = usuarioId.value;
+
+  await fetch(`https://back-nest-xi.vercel.app/users/${id}`, {
+    method: "PUT",
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      name: nombre.value,
+      lastname: apellido.value,
+      email: email.value
+    })
+  });
+
+  cerrarModal();
+  cargarUsers();
 }
 
-document.addEventListener("DOMContentLoaded", function (){
-    const btnNoti = document.getElementById("btn-notification");
-    const panelNoti = document.getElementById("notificaciones");
-
-
-    btnNoti.addEventListener("click", (e) => {
-        e.stopPropagation(); 
-        panelNoti.classList.toggle("hidden");
-    });
-
-    document.addEventListener("click", (e) => {
-        if (!panelNoti.contains(e.target)) {
-            panelNoti.classList.add("hidden");
-        }
-    });
-    cargarNotificaciones(); 
-});
+// ================= NOTIFICACIONES =================
 
 async function cargarNotificaciones() {
-    try {
-        const token = localStorage.getItem("token");
-        const res = await fetch("https://back-nest-xi.vercel.app/notifications", {
-            headers: { "Authorization": "Bearer " + token }
-        });
+  const token = localStorage.getItem("token");
 
-        if (!res.ok) {
-            console.error("Error al obtener notificaciones");
-            return;
-        }
-<<<<<<< HEAD
-        const data = await res.json(); // lista de notificaciones
-        // Actualizar badge con la cantidad
-        let noLeidas = 0 
-        data.forEach(noti => {
-          if (noti.read == false){
-            noLeidas = noLeidas+1
-          }
-        })
-        actualizarBadge(noLeidas);
-        // Actualizar lista del panel
-        const lista = document.getElementById("lista-notificaciones");
-        lista.innerHTML = "";
-        if (data.length === 0) {
-            lista.innerHTML = `<li>No hay notificaciones nuevas.</li>`;
-        } else {
-        data.forEach(noti => {
-        const li = document.createElement("li");
-        li.classList.remove("bg-blue-100", "text-gray-600");
-        li.classList.add("bg-blue-300", "text-blue-900");
+  const res = await fetch(
+    "https://back-nest-xi.vercel.app/notifications",
+    { headers: { Authorization: "Bearer " + token } }
+  );
 
-        
-        li.className = `
-        notificacion p-2 rounded mb-2 border-l-4 cursor-pointer flex justify-between items-center
-        ${noti.read ? "bg-blue-300 text-blue-900" : "bg-blue-100 text-gray-600"}
-    `;
-    li.innerHTML = noti.title ?? "Notificación";
-
-
-
-    const noLeida = document.createElement("button");
-    noLeida.className ="ml-3 px-2 py-1 text-blue-600 hover:text-blue-800 font-bold"
-    noLeida.textContent = "O";
-   // noLeida.classList.add("flex-1");
-    noLeida.addEventListener("click", () => marcarUnaComoLeida(noLeida, noti._id));
-
-    const btnEliminar = document.createElement("button");
-    btnEliminar.innerHTML = "X";
-    btnEliminar.className =
-        "ml-3 px-2 py-1 text-red-600 hover:text-red-800 font-bold";
-    btnEliminar.addEventListener("click", (e) => {
-        e.stopPropagation();
-        eliminarNotificacion(noti._id);
-    });
-    li.appendChild(noLeida);
-    li.appendChild(btnEliminar);
-    lista.appendChild(li);
-});
-        }
-=======
->>>>>>> c9e1152901d586c9b3487a8543247caf5d3ca910
-
-        const data = await res.json();
-
-       
-        const noLeidas = data.filter(noti => !noti.read).length;
-        actualizarBadge(noLeidas);
-
-        
-        renderNotificaciones(data);
-
-    } catch (err) {
-        console.error("Error cargando notificaciones:", err);
-    }
+  const data = await res.json();
+  actualizarBadge(data.filter(n => !n.read).length);
+  renderNotificaciones(data);
 }
-
 
 function actualizarBadge(cantidad) {
-    const badge = document.getElementById("badge");
-
-    if (cantidad > 0) {
-        badge.textContent = cantidad;
-        badge.classList.remove("hidden");
-    } else {
-        badge.classList.add("hidden");
-    }
-}
-
-function llenarPanel(notificaciones) {
-    const lista = document.getElementById("lista-notificaciones");
-    lista.innerHTML = "";
-
-    if (notificaciones.length === 0) {
-        lista.innerHTML = "<li>No hay notificaciones.</li>";
-        return;
-    }
-
-    notificaciones.forEach(noti => {
-        const li = document.createElement("li");
-        li.textContent = noti.message;
-        li.className = noti.read ? "text-blue-500" : "text-white font-semibold";
-        lista.appendChild(li);
-    });
-}
-async function marcarComoLeidas() {
-    try {
-        const token = localStorage.getItem("token");
-
-        const res = await fetch("https://back-nest-xi.vercel.app/notifications/read" , {
-            method: "PATCH",
-            headers: {
-                "Authorization": "Bearer " + token,
-                "Content-Type": "application/json"
-            }
-        });
-
-        if (res.ok) {
-<<<<<<< HEAD
-            cargarNotificaciones(); // para refrescar el panel
-=======
-            actualizarBadge(0);
-            cargarNotificaciones(); 
->>>>>>> c9e1152901d586c9b3487a8543247caf5d3ca910
-        }
-
-    } catch (err) {
-        console.error("Error al marcar como leídas", err);
-    }
+  const badge = document.getElementById("badge");
+  badge.textContent = cantidad;
+  badge.classList.toggle("hidden", cantidad === 0);
 }
 
 function renderNotificaciones(notificaciones) {
-    const lista = document.getElementById("lista-notificaciones");
-    lista.innerHTML = "";
+  const lista = document.getElementById("lista-notificaciones");
+  lista.innerHTML = "";
 
-    if (notificaciones.length === 0) {
-        lista.innerHTML = `<li class="text-gray-400 text-sm p-3">No hay notificaciones.</li>`;
-        return;
-    }
+  if (!notificaciones.length) {
+    lista.innerHTML = `
+      <li class="p-4 text-gray-400 text-sm">
+        No hay notificaciones
+      </li>
+    `;
+    return;
+  }
 
-    notificaciones.forEach(noti => {
-        const li = document.createElement("li");
+  notificaciones.forEach(noti => {
+    const li = document.createElement("li");
 
-        li.className = `
-            flex justify-between items-center p-3 rounded-lg cursor-pointer 
-            transition
-            ${noti.read 
-                ? "bg-white hover:bg-blue-100 text-gray-600" 
-                : "bg-blue-50 hover:bg-blue-100 text-black font-semibold"}
-        `;
+    li.className = `
+      p-4 hover:bg-gray-50 dark:hover:bg-black/20 transition-colors
+      ${noti.read ? "opacity-70" : ""}
+    `;
 
-        li.innerHTML = `
-            <div>
-                <p>${noti.title}</p>
-                <p class="text-sm text-gray-500">${noti.description ?? ""}</p>
-            </div>
+    li.innerHTML = `
+      <div class="flex gap-3">
 
-            <div class="flex gap-3 items-center">
-                <button 
-                    onclick="marcarUnaComoLeida('${noti._id}')"
-                    class="w-3 h-3 rounded-full 
-                    ${noti.read ? "bg-gray-400" : "bg-blue-600"}">
-                </button>
+        <!-- ICONO -->
+        <div class="
+          size-8 rounded-full
+          ${noti.read
+            ? "bg-gray-200 dark:bg-gray-700 text-gray-500"
+            : "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400"}
+          flex items-center justify-center shrink-0
+        ">
+          <span class="material-symbols-outlined text-[18px]">
+            person_add
+          </span>
+        </div>
 
-                <button 
-                    onclick="borrarNotificacion('${noti._id}')"
-                    class="text-red-500 hover:text-red-700 text-lg font-bold">
-                    ×
-                </button>
-            </div>
-        `;
+        <!-- CONTENIDO -->
+        <div class="flex-1 space-y-1">
+          <p class="text-sm font-medium text-text-main dark:text-white leading-tight">
+            ${noti.title}
+          </p>
+          <p class="text-xs text-text-sub dark:text-gray-400">
+            ${noti.description ?? ""}
+          </p>
 
-        lista.appendChild(li);
-    });
-}
+          <!-- ACCIONES -->
+          <div class="flex gap-2 pt-1">
+            <button
+              onclick="marcarUnaComoLeida('${noti._id}')"
+              class="
+                text-[10px] font-bold uppercase tracking-wide
+                px-3 py-1 rounded-full
+                ${noti.read
+                  ? "bg-gray-200 dark:bg-gray-700 text-gray-500 cursor-default"
+                  : "bg-primary text-black hover:bg-yellow-400"}
+                transition-colors
+              "
+              ${noti.read ? "disabled" : ""}
+            >
+              Read
+            </button>
 
-async function borrarNotificacion(id) {
-    try {
-        const token = localStorage.getItem("token");
+            <button
+              onclick="eliminarNotificacion('${noti._id}')"
+              class="
+                text-[10px] font-bold uppercase tracking-wide
+                px-3 py-1 rounded-full
+                bg-gray-100 dark:bg-gray-800
+                text-text-sub
+                hover:bg-gray-200 dark:hover:bg-gray-700
+                transition-colors
+              "
+            >
+              Delete
+            </button>
+          </div>
+        </div>
 
-        const res = await fetch(`https://back-nest-xi.vercel.app/notifications/${id}`, {
-            method: "DELETE",
-            headers: { "Authorization": "Bearer " + token }
-        });
+      </div>
+    `;
 
-        if (res.ok) {
-            cargarNotificaciones();
-        }
-    } catch (err) {
-        console.error("Error eliminando notificación", err);
-    }
+    lista.appendChild(li);
+  });
 }
 
 
 async function marcarUnaComoLeida(id) {
-    try {
-        const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
-        const res = await fetch(`https://back-nest-xi.vercel.app/notifications/${id}/read`, {
-            method: "PATCH",
-            headers: { "Authorization": "Bearer " + token }
-        });
-
-        if (res.ok) {
-            cargarNotificaciones();
-        }
-
-    } catch (err) {
-        console.error("Error marcando notificación como leída", err);
-    }
-}
-
-async function send() {
-
-    const title = document.getElementById("title").value;
-    const description = document.getElementById("description").value;
-    
-    const nuevaNotificacion = {
-        title : title,
-        description : description,
-        read : false
-    }
-  try {
-    const title = document.getElementById("title").value;
-    const description = document.getElementById("description").value;
-    const token = localStorage.getItem("token");
-
-    const nuevaNotificacion = {
-      title : title,
-      description : description,
-      read : false
-    }
-    const res = await fetch("https://back-nest-xi.vercel.app/notifications", {
-      method: "POST",
-      headers: {
-        "Authorization": "Bearer " + token,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(nuevaNotificacion)
-    });
-      if (res.ok) {
-        cargarNotificaciones();
-      }
-    const data = await res.json();
-    console.log("Notificaciones:", data);
-
-  } catch (error) {
-    console.error("Error al obtener las notificaciones:", error);
-  }
-
-}
-
-function noLeidas() {
-  const div = document.createElement("div");
-
-  div.className = `notificacion ${noLeidas.read ? "leida" : "no-leida"}`;
-
-  div.innerHTML = `
-    <h4>${n.title}</h4>
-    <p>${n.message}</p>
-    <button onclick="marcarComoLeida('${noLeidas.id}', this)">Marcar como leída</button>
-  `;
-
-  return div;
-}
-
-async function marcarUnaComoLeida(boton, id) {
-  try {
-    const token = localStorage.getItem("token");
-
-    const res = await fetch(`https://back-nest-xi.vercel.app/notifications/${id}/read`, {
+  await fetch(
+    `https://back-nest-xi.vercel.app/notifications/${id}/read`,
+    {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + token
-      }
-    });
-
-    if (!res.ok) {
-      console.error("Error al marcar como leída");
-      return;
+      headers: { Authorization: "Bearer " + token }
     }
+  );
 
-    const div = boton.closest(".notificacion");
-    div.classList.remove("no-leida");
-    div.classList.add("leida");
-
-    boton.remove(); 
-
-    btnNoti.addEventListener("click", (e) => {
-    e.stopPropagation();
-    panelNoti.classList.toggle("hidden"); 
-});
-
-  } catch (error) {
-    console.error("Error marcando como leído:", error);
-  }
+  cargarNotificaciones();
 }
 
 async function eliminarNotificacion(id) {
-    try {
-        const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
-        const res = await fetch(`https://back-nest-xi.vercel.app/notifications/${id}`, {
-            method: "DELETE",
-            headers: {
-                "Authorization": "Bearer " + token
-            }
-        });
-
-        if (!res.ok) {
-            console.error("Error al eliminar notificación");
-            return;
-        }
-
-        cargarNotificaciones();
-
-    } catch (error) {
-        console.error("Error eliminando notificación:", error);
+  await fetch(
+    `https://back-nest-xi.vercel.app/notifications/${id}`,
+    {
+      method: "DELETE",
+      headers: { Authorization: "Bearer " + token }
     }
+  );
+
+  cargarNotificaciones();
 }

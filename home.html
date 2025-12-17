@@ -4,11 +4,111 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
     <script src="home.js"></script>
     <link rel="stylesheet" href="home.css">
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f9f506",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#23220f",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#2c2b18",
+                        "text-main": "#181811",
+                        "text-sub": "#8c8b5f",
+                        "border-color": "#e6e6db",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
 </head>
-<body>
+<body class="bg-background-light dark:bg-background-dark text-text-main dark:text-white font-display">
+    <header class="sticky top-0 z-30 flex items-center justify-between border-b border-solid border-border-color dark:border-surface-dark bg-white dark:bg-background-dark px-6 py-4 lg:px-10">
+<div class="flex items-center gap-4 text-text-main dark:text-white">
+<div class="flex items-center justify-center size-10 rounded-full bg-primary text-black">
+<span class="material-symbols-outlined">dashboard</span>
+</div>
+<h2 class="text-xl font-bold leading-tight tracking-tight">AdminPanel</h2>
+</div>
+<div class="flex items-center gap-6">
+<!-- User Profile -->
+<div class="hidden md:flex items-center gap-3">
+<div class="flex flex-col items-end">
+    <span id="saludo" class="text-sm font-bold leading-none">
+        Hola
+    </span>
+<span class="text-xs text-text-sub dark:text-gray-400">Super Admin</span>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 ring-2 ring-primary/20" data-alt="Portrait of admin user John Doe" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAO11dy2wOWES_JCPSilICBk_4K9kfbE8bth7rWPUEW8Dp4dZCmCPhjDvyz5w0J8qklWsWZXEBGYnagurzYiQ_bXTSEX1J25bc1MCeC6APzt-KCzUq2zXMym39b1aOa-jiyU596szXt8qV7fc_FmfOohZQn0hoCH-MSq_hSyaJRV7yDL6_SQ_fcjwhdthYs6_PiW4RAef8LNsyzhSowy_IPQUb4yUoz1sWxSVumbhCtg1N7g31pzcBjmEUVH_eiNTH4sC3W7E-GOxo");'></div>
+</div>
+<!-- Notification Bell (Trigger) -->
+<div class="relative group">
+<button id="btn-notification" class="relative flex items-center justify-center size-10 rounded-full bg-surface-light dark:bg-surface-dark border border-border-color dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined text-text-main dark:text-white">notifications</span>
+<span class="absolute top-2 right-2 size-2.5 bg-red-500 border-2 border-white dark:border-background-dark rounded-full"></span>
+</button>
+<!-- Notification Dropdown Modal (Pseudo-modal for demo) -->
+<div id="notificaciones" class="absolute right-0 top-full mt-3 w-80 sm:w-96 p-4 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right">
+<div class="bg-white dark:bg-surface-dark rounded-xl shadow-xl border border-border-color dark:border-gray-700 overflow-hidden">
+<div class="p-4 border-b border-border-color dark:border-gray-700 flex justify-between items-center">
+<h3 class="font-bold text-sm">Notifications</h3>
+<button class="text-xs text-text-sub hover:text-primary transition-colors">Mark all read</button>
+</div>
+<div class="max-h-[300px] overflow-y-auto">
+<!-- Notification Item 1 -->
+<div id="lista-notificaciones" class="p-4 border-b border-border-color dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-black/20 transition-colors">
+<div class="flex gap-3">
+<div class="size-8 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px]">info</span>
+</div>
+<div class="flex-1 space-y-2">
+<p class="text-sm font-medium text-text-main dark:text-white leading-tight">System Maintenance</p>
+<p class="text-xs text-text-sub dark:text-gray-400">Scheduled downtime tonight at 2:00 AM EST for 30 mins.</p>
+<div class="flex gap-2 pt-1">
+<button class="text-[10px] font-bold uppercase tracking-wide px-3 py-1 rounded-full bg-primary text-black hover:bg-yellow-400 transition-colors">Read</button>
+<button class="text-[10px] font-bold uppercase tracking-wide px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-text-sub hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">Delete</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Notification Item 2 -->
+<div class="p-4 hover:bg-gray-50 dark:hover:bg-black/20 transition-colors">
+<div class="flex gap-3">
+<div class="size-8 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px]">person_add</span>
+</div>
+<div class="flex-1 space-y-2">
+<p class="text-sm font-medium text-text-main dark:text-white leading-tight">New User Registration</p>
+<p class="text-xs text-text-sub dark:text-gray-400">Anna Karenina has requested access.</p>
+<div class="flex gap-2 pt-1">
+<button id="" class="text-[10px] font-bold uppercase tracking-wide px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-text-main dark:text-white hover:bg-primary hover:text-black transition-colors">Read</button>
+<button class="text-[10px] font-bold uppercase tracking-wide px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-text-sub hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">Delete</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="p-3 bg-gray-50 dark:bg-black/20 text-center">
+<button class="text-xs font-bold text-text-main dark:text-white hover:underline">View All Activity</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+
     <nav class="relative bg-gray-800/50 after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-white/10">
         <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
             <div class="relative flex h-16 items-center justify-between">
@@ -32,10 +132,7 @@
                 <div class="hidden sm:ml-6 sm:block">
                 <div class="flex space-x-4">
                     <!-- Current: "bg-gray-950/50 text-white", Default: "text-gray-300 hover:bg-white/5 hover:text-white" -->
-                    <a href="#" aria-current="page" class="rounded-md bg-gray-950/50 px-3 py-2 text-sm font-medium text-white">Dashboard</a>
-                    <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">Team</a>
-                    <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">Projects</a>
-                    <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">Calendar</a>
+                    <a href="#" aria-current="page" class="rounded-md bg-gray-950/50 px-3 py-2 text-sm font-medium text-white">AdminPanel</a>
                 </div>
                 </div>
             </div>
@@ -52,40 +149,49 @@
             </button>
     <div id="notificaciones" class="hidden absolute top-full right-0 mt-2 w-64 rounded-lg bg-gray-800 p-4 shadow-lg border border-white/10 z-50">
         <p class="text-gray-300 font-semibold mb-2">Notificaciones</p>
-        <ul id="lista-notificaciones" class="text-gray-400 text-sm space-y-2">
+        <ul id="lista-notificaciones" class="list-none p-0 m-0 text-gray-400 text-sm space-y-2">
             <li>No hay notificaciones nuevas.</li>
         </ul>
     </div>
 
-                <!-- Profile dropdown -->
-                <el-dropdown class="relative ml-3">
-                <button class="relative flex rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
-                    <span class="absolute -inset-1.5"></span>
-                    <span class="sr-only">Open user menu</span>
-                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="size-8 rounded-full bg-gray-800 outline -outline-offset-1 outline-white/10" />
-                </button>
+    <div class="relative ml-3 flex items-center gap-3 text-gray-300 text-l">
 
-                <el-menu anchor="bottom end" popover class="w-48 origin-top-right rounded-md bg-gray-800 py-1 outline -outline-offset-1 outline-white/10 transition transition-discrete [--anchor-gap:--spacing(2)] data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in">
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-300 focus:bg-white/5 focus:outline-hidden">Your profile</a>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-300 focus:bg-white/5 focus:outline-hidden">Settings</a>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-300 focus:bg-white/5 focus:outline-hidden">Sign out</a>
-                </el-menu>
-                </el-dropdown>
+
+    <el-dropdown>
+        <button class="relative flex rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+            <span class="absolute -inset-1.5"></span>
+            <span class="sr-only">Open user menu</span>
+            <img
+                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                alt=""
+                class="size-8 rounded-full bg-gray-800 outline -outline-offset-1 outline-white/10"
+            />
+        </button>
+
+        <el-menu
+            anchor="bottom end"
+            popover
+            class="w-48 origin-top-right rounded-md bg-gray-800 py-1 outline -outline-offset-1 outline-white/10">
+            <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5">Perfil</a>
+            <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5">Configuración</a>
+            <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5">Cerrar sesión</a>
+        </el-menu>
+    </el-dropdown>
+</div>
             </div>
             </div>
         </div>
 
         <el-disclosure id="mobile-menu" hidden class="block sm:hidden">
             <div class="space-y-1 px-2 pt-2 pb-3">
-            <!-- Current: "bg-gray-950/50 text-white", Default: "text-gray-300 hover:bg-white/5 hover:text-white" -->
-            <a href="#" aria-current="page" class="block rounded-md bg-gray-950/50 px-3 py-2 text-base font-medium text-white">Dashboard</a>
+            <a href="#" aria-current="page" class="block rounded-md bg-gray-950/50 px-3 py-2 text-base font-medium text-white"></a>
             <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-white/5 hover:text-white">Team</a>
             <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-white/5 hover:text-white">Projects</a>
             <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-white/5 hover:text-white">Calendar</a>
             </div>
         </el-disclosure>
 </nav>
-    <h1 id="saludo" class="text-2xl font-bold"> Hola</h1>
+    <h1 class="text-2xl font-bold tracking-tight text-text-main dark:text-black p-1">User Directory</h1>
     <div class="">
             <table id="aime">
                 <thead>
@@ -104,7 +210,6 @@
 <div id="myModal" class="modal">
     <div class="modal-content">
     <span id="closeModal" class="close">&times;</span>
-            <h1 class="font-bold text-2xl mt-4 mb-6 text-center">Editar datos</h1>
             <input type="hidden" id="usuarioId">
             <div class="mt-2">
                 <label class="text-gray-500 mb-2" for="">Nombre</label>
