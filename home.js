@@ -37,33 +37,53 @@ async function cargarUsers() {
 }
 
 function renderTabla(users) {
-  const tbody = document.querySelector("#aime tbody");
+  const tbody = document.getElementById("aime-body");
   tbody.innerHTML = "";
 
   users.forEach(user => {
     const tr = document.createElement("tr");
-    tr.className = "border-b";
+    tr.className = "group hover:bg-gray-50 transition-colors";
 
     tr.innerHTML = `
-      <td class="p-2">${user.name}</td>
-      <td class="p-2">${user.lastname}</td>
-      <td class="p-2">${user.email}</td>
-      <td class="p-2 flex gap-2">
-        <button 
-          class="bg-red-500 hover:bg-red-400 text-white px-3 py-1 rounded"
-          onclick="borrarUsuario('${user._id}')">
-          Borrar
-        </button>
-        <button 
-          class="bg-blue-500 hover:bg-blue-400 text-white px-3 py-1 rounded"
-          onclick="mostrarModal('${user._id}')">
-          Editar
-        </button>
+      <td class="px-6 py-4">
+        <div class="flex items-center gap-3">
+          <div class="size-9 rounded-full bg-primary text-black font-bold flex items-center justify-center">
+            ${user.name.charAt(0)}${user.lastname.charAt(0)}
+          </div>
+          <div>
+            <p class="font-bold text-sm">${user.name} ${user.lastname}</p>
+            <p class="text-xs text-text-sub">User</p>
+          </div>
+        </div>
+      </td>
+
+      <td class="px-6 py-4 text-sm text-text-sub">
+        ${user.email}
+      </td>
+
+      <td class="px-6 py-4 text-right">
+        <div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition">
+          <button
+            onclick="mostrarModal('${user._id}')"
+            class="size-8 rounded-full border border-border-color flex items-center justify-center hover:bg-primary hover:text-black transition"
+          >
+            <span class="material-symbols-outlined text-[16px]">edit</span>
+          </button>
+
+          <button
+            onclick="borrarUsuario('${user._id}')"
+            class="size-8 rounded-full border border-border-color flex items-center justify-center hover:bg-red-500 hover:text-white transition"
+          >
+            <span class="material-symbols-outlined text-[16px]">delete</span>
+          </button>
+        </div>
       </td>
     `;
+
     tbody.appendChild(tr);
   });
 }
+
 
 async function borrarUsuario(id) {
   const token = localStorage.getItem("token");
@@ -80,6 +100,7 @@ async function borrarUsuario(id) {
 
 async function mostrarModal(id) {
   document.getElementById("myModal").classList.remove("hidden");
+  document.getElementById("myModal").classList.add("flex");
 
   const token = localStorage.getItem("token");
   const res = await fetch(
@@ -96,7 +117,9 @@ async function mostrarModal(id) {
 }
 
 function cerrarModal() {
-  document.getElementById("myModal").classList.add("hidden");
+  const modal = document.getElementById("myModal");
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
 }
 
 async function editForm() {

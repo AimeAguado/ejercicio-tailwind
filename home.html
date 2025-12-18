@@ -109,135 +109,146 @@
 </div>
 </header>
 
-    <nav class="relative bg-gray-800/50 after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-white/10">
-        <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-            <div class="relative flex h-16 items-center justify-between">
-            <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
-                <!-- Mobile menu button-->
-                <button type="button" command="--toggle" commandfor="mobile-menu" class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-white/5 hover:text-white focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-500">
-                <span class="absolute -inset-0.5"></span>
-                <span class="sr-only">Open main menu</span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 in-aria-expanded:hidden">
-                    <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 not-in-aria-expanded:hidden">
-                    <path d="M6 18 18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-                </button>
-            </div>
-            <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-                <div class="flex shrink-0 items-center">
-                <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company" class="h-8 w-auto" />
-                </div>
-                <div class="hidden sm:ml-6 sm:block">
-                <div class="flex space-x-4">
-                    <!-- Current: "bg-gray-950/50 text-white", Default: "text-gray-300 hover:bg-white/5 hover:text-white" -->
-                    <a href="#" aria-current="page" class="rounded-md bg-gray-950/50 px-3 py-2 text-sm font-medium text-white">AdminPanel</a>
-                </div>
-                </div>
-            </div>
-            <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            <button id="btn-notification" class="relative rounded-full p-1 text-gray-400 hover:text-white focus:outline-2 focus:outline-offset-2 ">
-            <span class="absolute -inset-1.5"></span>
-            <span class="sr-only">View notifications</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6">
-            <path d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-            <span id="badge"
-            class="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full hidden">
-        </span>
-            </button>
-    <div id="notificaciones" class="hidden absolute top-full right-0 mt-2 w-64 rounded-lg bg-gray-800 p-4 shadow-lg border border-white/10 z-50">
-        <p class="text-gray-300 font-semibold mb-2">Notificaciones</p>
-        <ul id="lista-notificaciones" class="list-none p-0 m-0 text-gray-400 text-sm space-y-2">
-            <li>No hay notificaciones nuevas.</li>
-        </ul>
-    </div>
+        <main class="flex-1 p-6 lg:p-10 flex justify-center">
+    <div class="w-full max-w-6xl space-y-8">
 
-    <div class="relative ml-3 flex items-center gap-3 text-gray-300 text-l">
-
-
-    <el-dropdown>
-        <button class="relative flex rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
-            <span class="absolute -inset-1.5"></span>
-            <span class="sr-only">Open user menu</span>
-            <img
-                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                alt=""
-                class="size-8 rounded-full bg-gray-800 outline -outline-offset-1 outline-white/10"
-            />
-        </button>
-
-        <el-menu
-            anchor="bottom end"
-            popover
-            class="w-48 origin-top-right rounded-md bg-gray-800 py-1 outline -outline-offset-1 outline-white/10">
-            <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5">Perfil</a>
-            <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5">Configuración</a>
-            <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5">Cerrar sesión</a>
-        </el-menu>
-    </el-dropdown>
-</div>
-            </div>
-            </div>
-        </div>
-
-        <el-disclosure id="mobile-menu" hidden class="block sm:hidden">
-            <div class="space-y-1 px-2 pt-2 pb-3">
-            <a href="#" aria-current="page" class="block rounded-md bg-gray-950/50 px-3 py-2 text-base font-medium text-white"></a>
-            <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-white/5 hover:text-white">Team</a>
-            <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-white/5 hover:text-white">Projects</a>
-            <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-white/5 hover:text-white">Calendar</a>
-            </div>
-        </el-disclosure>
-</nav>
-    <h1 class="text-2xl font-bold tracking-tight text-text-main dark:text-black p-1">User Directory</h1>
-    <div class="">
-            <table id="aime">
-                <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Email</th>
-                    <th>Accion</th>
-                </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-    </div>
-    
-<div id="myModal" class="modal">
-    <div class="modal-content">
-    <span id="closeModal" class="close">&times;</span>
-            <input type="hidden" id="usuarioId">
-            <div class="mt-2">
-                <label class="text-gray-500 mb-2" for="">Nombre</label>
-                <input id="nombre" type="text" class="border border-gray-300 flex p-1 rounded w-full ">
-            </div>
-            <div class="mt-2">
-                <label class="text-gray-500 mb-2" for="">Apellido</label>
-                <input id="apellido" type="text" class="border border-gray-300 flex p-1 rounded w-full ">
-            </div>
-            <div class="mt-2">
-                <label class="text-gray-500 mb-2" for="email">Email</label>
-                <input id="email" class="border border-gray-300 flex p-1 rounded w-full " type="text">
-            </div>
-            <button onclick="editForm()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 w-full my-6 rounded"> Guardar </button>
-        </div>
-        </div>
-
+        <!-- HEADER -->
+        <div class="flex items-center justify-between">
         <div>
-            <div class="mt-2 ml-2">
-            <label class="text-gray-500 mb-2" for="title">Titulo</label>
-            <input id="title" class="border border-gray-300 flex p-1 rounded w-200 " type="text">
-            <label class="text-gray-500 mb-2" for="description">Descripción</label>
-            <input id="description" class="border border-gray-300 flex p-1 pb-14 rounded w-200 text-left" type="text">
-            <button onclick="send()"class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 w-40 my-6 rounded">
-                Enviar
+            <h2 class="text-3xl font-bold tracking-tight">User Directory</h2>
+            <p class="text-text-sub mt-1">Manage user access and details.</p>
+        </div>
+        </div>
+
+        <!-- TABLE CARD -->
+        <div class="overflow-hidden rounded-xl border border-border-color bg-white shadow-sm">
+        <div class="overflow-x-auto">
+            <table class="w-full min-w-[700px]">
+            <thead class="bg-gray-50 border-b border-border-color">
+                <tr>
+                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-text-sub">User</th>
+                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-text-sub">Email</th>
+                <th class="px-6 py-4 text-right text-xs font-bold uppercase text-text-sub">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody id="aime-body" class="divide-y divide-border-color">
+                <!-- JS render -->
+            </tbody>
+            </table>
+        </div>
+        </div>
+
+    </div>
+    </main>
+    
+    <div id="myModal" class="fixed inset-0 hidden items-center justify-center bg-black/40 backdrop-blur-sm z-50">
+    <div class="w-full max-w-md bg-white rounded-xl shadow-2xl border border-border-color">
+
+        <div class="flex justify-between items-center p-5 border-b">
+        <h3 class="font-bold text-lg">Edit User</h3>
+        <button onclick="cerrarModal()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            </div>
+
+            <div class="p-6 space-y-4">
+            <input type="hidden" id="usuarioId">
+
+            <div>
+                <label class="text-xs font-bold text-text-sub">Nombre</label>
+                <input id="nombre" class="w-full mt-1 rounded-full border px-4 py-2" />
+            </div>
+
+            <div>
+                <label class="text-xs font-bold text-text-sub">Apellido</label>
+                <input id="apellido" class="w-full mt-1 rounded-full border px-4 py-2" />
+            </div>
+
+            <div>
+                <label class="text-xs font-bold text-text-sub">Email</label>
+                <input id="email" class="w-full mt-1 rounded-full border px-4 py-2" />
+            </div>
+            </div>
+
+            <div class="flex justify-end gap-3 p-5 border-t bg-gray-50">
+            <button onclick="cerrarModal()" class="px-5 py-2 rounded-full border font-bold">
+                Cancel
+            </button>
+            <button onclick="editForm()" class="px-5 py-2 rounded-full bg-primary font-bold">
+                Save
+            </button>
+            </div>
+
+        </div>
+        </div>
+
+    <section class="max-w-3xl mx-auto mt-10">
+    <!-- Header -->
+    <div class="mb-6">
+        <h3 class="text-2xl font-bold tracking-tight text-text-main">
+        Crear notificaciones
+        </h3>
+    </div>
+
+    <!-- Card -->
+    <div class="bg-white rounded-xl border border-border-color p-6 sm:p-8 shadow-sm">
+        <form class="space-y-6">
+
+        <div class="space-y-4">
+            <!-- Title -->
+            <div class="grid gap-1">
+            <label for="title" class="text-sm font-bold text-text-main ml-2">
+                Título
+            </label>
+            <input
+                id="title"
+                type="text"
+                placeholder="Tu titulo aqui"
+                class="w-full rounded-full border border-border-color bg-background-light px-5 py-3 text-sm focus:border-primary focus:ring-primary transition-shadow"
+            />
+            </div>
+
+            <!-- Description -->
+            <div class="grid gap-1">
+            <label for="description" class="text-sm font-bold text-text-main ml-2">
+                Descripción
+            </label>
+            <textarea
+                id="description"
+                rows="4"
+                placeholder="Tu descripción aqui"
+                class="w-full rounded-2xl border border-border-color bg-background-light px-5 py-3 text-sm focus:border-primary focus:ring-primary resize-none transition-shadow"
+            ></textarea>
+            </div>
+
+            <!-- Priority -->
+            <div class="flex items-center gap-2 pt-2 ml-2">
+            <input
+                id="urgent"
+                type="checkbox"
+                class="rounded border-gray-300 text-primary focus:ring-primary"
+            />
+            <label for="urgent" class="text-sm font-medium text-text-sub">
+                Acepto terminos y condiciones
+            </label>
+            </div>
+        </div>
+
+        <!-- Button -->
+        <div class="flex justify-end pt-2">
+            <button
+            type="button"
+            onclick="send()"
+            class="px-8 py-3 bg-primary text-black font-bold rounded-full shadow-lg shadow-primary/20 hover:bg-yellow-400 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+            >
+            Enviar notificacion
             </button>
         </div>
-        </div>
+
+        </form>
+    </div>
+    </section>
         
 </body>
 </html>
