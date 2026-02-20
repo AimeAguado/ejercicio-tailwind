@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script src="home.js"></script>
+    <link rel="stylesheet" href="home.css">
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f9f506",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#23220f",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#2c2b18",
+                        "text-main": "#181811",
+                        "text-sub": "#8c8b5f",
+                        "border-color": "#e6e6db",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-main dark:text-white font-display">
+    <header class="sticky top-0 z-30 flex items-center justify-between border-b border-solid border-border-color dark:border-surface-dark bg-white dark:bg-background-dark px-6 py-4 lg:px-10">
+<div class="flex items-center gap-4 text-text-main dark:text-white">
+<div class="flex items-center justify-center size-10 rounded-full bg-primary text-black">
+<span class="material-symbols-outlined">dashboard</span>
+</div>
+<h2 class="text-xl font-bold leading-tight tracking-tight">AdminPanel</h2>
+</div>
+<div class="flex items-center gap-6">
+<!-- User Profile -->
+<div class="hidden md:flex items-center gap-3">
+<div class="flex flex-col items-end">
+    <span id="saludo" class="text-sm font-bold leading-none">
+        Hola
+    </span>
+<span class="text-xs text-text-sub dark:text-gray-400">Super Admin</span>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 ring-2 ring-primary/20" data-alt="Portrait of admin user John Doe" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAO11dy2wOWES_JCPSilICBk_4K9kfbE8bth7rWPUEW8Dp4dZCmCPhjDvyz5w0J8qklWsWZXEBGYnagurzYiQ_bXTSEX1J25bc1MCeC6APzt-KCzUq2zXMym39b1aOa-jiyU596szXt8qV7fc_FmfOohZQn0hoCH-MSq_hSyaJRV7yDL6_SQ_fcjwhdthYs6_PiW4RAef8LNsyzhSowy_IPQUb4yUoz1sWxSVumbhCtg1N7g31pzcBjmEUVH_eiNTH4sC3W7E-GOxo");'></div>
+</div>
+<!-- Notification Bell (Trigger) -->
+<div class="relative group">
+<button id="btn-notification" class="relative flex items-center justify-center size-10 rounded-full bg-surface-light dark:bg-surface-dark border border-border-color dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined text-text-main dark:text-white">notifications</span>
+<span class="absolute top-2 right-2 size-2.5 bg-red-500 border-2 border-white dark:border-background-dark rounded-full"></span>
+</button>
+<!-- Notification Dropdown Modal (Pseudo-modal for demo) -->
+<div id="notificaciones" class="absolute right-0 top-full mt-3 w-80 sm:w-96 p-4 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right">
+<div class="bg-white dark:bg-surface-dark rounded-xl shadow-xl border border-border-color dark:border-gray-700 overflow-hidden">
+<div class="p-4 border-b border-border-color dark:border-gray-700 flex justify-between items-center">
+<h3 class="font-bold text-sm">Notifications</h3>
+<button class="text-xs text-text-sub hover:text-primary transition-colors">Mark all read</button>
+</div>
+<div class="max-h-[300px] overflow-y-auto">
+<!-- Notification Item 1 -->
+<div id="lista-notificaciones" class="p-4 border-b border-border-color dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-black/20 transition-colors">
+<div class="flex gap-3">
+<div class="size-8 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px]">info</span>
+</div>
+<div class="flex-1 space-y-2">
+<p class="text-sm font-medium text-text-main dark:text-white leading-tight">System Maintenance</p>
+<p class="text-xs text-text-sub dark:text-gray-400">Scheduled downtime tonight at 2:00 AM EST for 30 mins.</p>
+<div class="flex gap-2 pt-1">
+<button class="text-[10px] font-bold uppercase tracking-wide px-3 py-1 rounded-full bg-primary text-black hover:bg-yellow-400 transition-colors">Read</button>
+<button class="text-[10px] font-bold uppercase tracking-wide px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-text-sub hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">Delete</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Notification Item 2 -->
+<div class="p-4 hover:bg-gray-50 dark:hover:bg-black/20 transition-colors">
+<div class="flex gap-3">
+<div class="size-8 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px]">person_add</span>
+</div>
+<div class="flex-1 space-y-2">
+<p class="text-sm font-medium text-text-main dark:text-white leading-tight">New User Registration</p>
+<p class="text-xs text-text-sub dark:text-gray-400">Anna Karenina has requested access.</p>
+<div class="flex gap-2 pt-1">
+<button id="" class="text-[10px] font-bold uppercase tracking-wide px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-text-main dark:text-white hover:bg-primary hover:text-black transition-colors">Read</button>
+<button class="text-[10px] font-bold uppercase tracking-wide px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-text-sub hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">Delete</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="p-3 bg-gray-50 dark:bg-black/20 text-center">
+<button class="text-xs font-bold text-text-main dark:text-white hover:underline">View All Activity</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+
+        <main class="flex-1 p-6 lg:p-10 flex justify-center">
+    <div class="w-full max-w-6xl space-y-8">
+
+        <!-- HEADER -->
+        <div class="flex items-center justify-between">
+        <div>
+            <h2 class="text-3xl font-bold tracking-tight">User Directory</h2>
+            <p class="text-text-sub mt-1">Manage user access and details.</p>
+        </div>
+        </div>
+
+        <!-- TABLE CARD -->
+        <div class="overflow-hidden rounded-xl border border-border-color bg-white shadow-sm">
+        <div class="overflow-x-auto">
+            <table class="w-full min-w-[700px]">
+            <thead class="bg-gray-50 border-b border-border-color">
+                <tr>
+                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-text-sub">User</th>
+                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-text-sub">Email</th>
+                <th class="px-6 py-4 text-right text-xs font-bold uppercase text-text-sub">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody id="aime-body" class="divide-y divide-border-color">
+                <!-- JS render -->
+            </tbody>
+            </table>
+        </div>
+        </div>
+
+    </div>
+    </main>
+    
+    <div id="myModal" class="fixed inset-0 hidden items-center justify-center bg-black/40 backdrop-blur-sm z-50">
+    <div class="w-full max-w-md bg-white rounded-xl shadow-2xl border border-border-color">
+
+        <div class="flex justify-between items-center p-5 border-b">
+        <h3 class="font-bold text-lg">Edit User</h3>
+        <button onclick="cerrarModal()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            </div>
+
+            <div class="p-6 space-y-4">
+            <input type="hidden" id="usuarioId">
+
+            <div>
+                <label class="text-xs font-bold text-text-sub">Nombre</label>
+                <input id="nombre" class="w-full mt-1 rounded-full border px-4 py-2" />
+            </div>
+
+            <div>
+                <label class="text-xs font-bold text-text-sub">Apellido</label>
+                <input id="apellido" class="w-full mt-1 rounded-full border px-4 py-2" />
+            </div>
+
+            <div>
+                <label class="text-xs font-bold text-text-sub">Email</label>
+                <input id="email" class="w-full mt-1 rounded-full border px-4 py-2" />
+            </div>
+            </div>
+
+            <div class="flex justify-end gap-3 p-5 border-t bg-gray-50">
+            <button onclick="cerrarModal()" class="px-5 py-2 rounded-full border font-bold">
+                Cancel
+            </button>
+            <button onclick="editForm()" class="px-5 py-2 rounded-full bg-primary font-bold">
+                Save
+            </button>
+            </div>
+
+        </div>
+        </div>
+
+    <section class="max-w-3xl mx-auto mt-10">
+    <!-- Header -->
+    <div class="mb-6">
+        <h3 class="text-2xl font-bold tracking-tight text-text-main">
+        Crear notificaciones
+        </h3>
+    </div>
+
+    <!-- Card -->
+    <div class="bg-white rounded-xl border border-border-color p-6 sm:p-8 shadow-sm">
+        <form class="space-y-6">
+
+        <div class="space-y-4">
+            <!-- Title -->
+            <div class="grid gap-1">
+            <label for="title" class="text-sm font-bold text-text-main ml-2">
+                Título
+            </label>
+            <input
+                id="title"
+                type="text"
+                placeholder="Tu titulo aqui"
+                class="w-full rounded-full border border-border-color bg-background-light px-5 py-3 text-sm focus:border-primary focus:ring-primary transition-shadow"
+            />
+            </div>
+
+            <!-- Description -->
+            <div class="grid gap-1">
+            <label for="description" class="text-sm font-bold text-text-main ml-2">
+                Descripción
+            </label>
+            <textarea
+                id="description"
+                rows="4"
+                placeholder="Tu descripción aqui"
+                class="w-full rounded-2xl border border-border-color bg-background-light px-5 py-3 text-sm focus:border-primary focus:ring-primary resize-none transition-shadow"
+            ></textarea>
+            </div>
+
+            <!-- Priority -->
+            <div class="flex items-center gap-2 pt-2 ml-2">
+            <input
+                id="urgent"
+                type="checkbox"
+                class="rounded border-gray-300 text-primary focus:ring-primary"
+            />
+            <label for="urgent" class="text-sm font-medium text-text-sub">
+                Acepto terminos y condiciones
+            </label>
+            </div>
+        </div>
+
+        <!-- Button -->
+        <div class="flex justify-end pt-2">
+            <button
+            type="button"
+            onclick="send()"
+            class="px-8 py-3 bg-primary text-black font-bold rounded-full shadow-lg shadow-primary/20 hover:bg-yellow-400 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+            >
+            Enviar notificacion
+            </button>
+        </div>
+
+        </form>
+    </div>
+    </section>
+        
+</body>
+</html>
